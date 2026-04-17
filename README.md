@@ -30,3 +30,6 @@ sudo ln -s ~/scripts/video-study.sh /usr/local/bin/video-study
 cd "Course folder location"
 video-study
 ```
+
+## Running script column (Timer + Open video file)
+Run the command from the same location you ran the video-study command (where the .csv was generated)
