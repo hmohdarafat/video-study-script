@@ -22,7 +22,7 @@ download and paste the script file here
 ```
 chmod +x ~/scripts/video-study.sh
 ```
-## Make it global command
+## Make it a global command
 ```
 sudo ln -s ~/scripts/video-study.sh /usr/local/bin/video-study
 ```
