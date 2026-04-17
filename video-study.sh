@@ -1,6 +1,10 @@
 output="video_durations.csv"
 total=0
 
+# ---- POMODORO SETTINGS ----
+POMODORO_LIMIT=$((25 * 60))   # 25 minutes
+pomodoro_acc=0
+
 echo "file,duration_hms,challenge_hms,script" > "$output"
 
 while IFS= read -r -d '' f; do
@@ -29,7 +33,25 @@ while IFS= read -r -d '' f; do
 
   printf "%-60s %s (challenge: %s)\n" "$f" "$hms" "$challenge_hms"
 
+  # ---- STRICT POMODORO PACKING (NO OVERFLOW LOSS) ----
+
+  # if current video does NOT fit in remaining time → close block first
+  if [ $((pomodoro_acc + secs)) -gt "$POMODORO_LIMIT" ] && [ "$pomodoro_acc" -ne 0 ]; then
+    echo "" >> "$output"   # close current Pomodoro block
+    pomodoro_acc=0
+  fi
+
+  # write row
   printf "\"%s\",%s,%s,\"%s\"\n" "$f" "$hms" "$challenge_hms" "$script" >> "$output"
+
+  # add to current block
+  pomodoro_acc=$((pomodoro_acc + secs))
+
+  # if exactly fills block → close immediately
+  if [ "$pomodoro_acc" -eq "$POMODORO_LIMIT" ]; then
+    echo "" >> "$output"
+    pomodoro_acc=0
+  fi
 
 done < <(find . -type f -iname "*.mp4" -print0 | sort -zV)
 
