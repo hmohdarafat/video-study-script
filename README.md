@@ -12,19 +12,21 @@ Does the following:
 
 
 ## Setup:
-
+```
 mkdir -p ~/scripts
+```
 download and paste the script file here
 
 ## Make it executable
-
+```
 chmod +x ~/scripts/video-study.sh
-
+```
 ## Make it global command
-
+```
 sudo ln -s ~/scripts/video-study.sh /usr/local/bin/video-study
-
+```
 ## How to use:
-
+```
 cd "Course folder location"
 video-study
+```
