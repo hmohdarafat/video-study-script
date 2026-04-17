@@ -9,3 +9,18 @@ Does the following:
 - Total time of all the videos
 - Total challenge time to finish all the videos
 - [!] Script for each video (row) that when run, will start the timer and open the video in your defualt media player.
+
+
+Setup:
+mkdir -p ~/scripts
+download and paste the script file here
+
+Make it executable
+chmod +x ~/scripts/video-study.sh
+
+Make it global command
+sudo ln -s ~/scripts/video-study.sh /usr/local/bin/video-study
+
+How to use:
+cd "Course folder location"
+video-study
