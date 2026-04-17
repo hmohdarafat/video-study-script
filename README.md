@@ -10,6 +10,7 @@ Does the following:
 - Total challenge time to finish all the videos
 - [!] Script for each video (row) that when run, will start the timer and open the video in your defualt media player.
 - Alarm will sound when the timer runs out.
+- Split by pomodoro sessions.
 
 
 ## Setup
