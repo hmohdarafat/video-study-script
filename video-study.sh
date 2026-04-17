@@ -4,6 +4,7 @@ total=0
 # ---- POMODORO SETTINGS ----
 POMODORO_LIMIT=$((25 * 60))   # 25 minutes
 pomodoro_acc=0
+pomodoro_sessions=0
 
 echo "file,duration_hms,challenge_hms,script" > "$output"
 
@@ -35,25 +36,28 @@ while IFS= read -r -d '' f; do
 
   # ---- STRICT POMODORO PACKING (NO OVERFLOW LOSS) ----
 
-  # if current video does NOT fit in remaining time → close block first
   if [ $((pomodoro_acc + secs)) -gt "$POMODORO_LIMIT" ] && [ "$pomodoro_acc" -ne 0 ]; then
-    echo "" >> "$output"   # close current Pomodoro block
+    echo "" >> "$output"
     pomodoro_acc=0
+    pomodoro_sessions=$((pomodoro_sessions + 1))
   fi
 
-  # write row
   printf "\"%s\",%s,%s,\"%s\"\n" "$f" "$hms" "$challenge_hms" "$script" >> "$output"
 
-  # add to current block
   pomodoro_acc=$((pomodoro_acc + secs))
 
-  # if exactly fills block → close immediately
   if [ "$pomodoro_acc" -eq "$POMODORO_LIMIT" ]; then
     echo "" >> "$output"
     pomodoro_acc=0
+    pomodoro_sessions=$((pomodoro_sessions + 1))
   fi
 
 done < <(find . -type f -iname "*.mp4" -print0 | sort -zV)
+
+# flush last session
+if [ "$pomodoro_acc" -gt 0 ]; then
+  pomodoro_sessions=$((pomodoro_sessions + 1))
+fi
 
 # ---- TOTAL ----
 total_h=$((total / 3600))
@@ -83,3 +87,8 @@ printf "CHALLENGE DEADLINE %s (%s)\n" "$challenge_deadline" "$(printf '%02d:%02d
 printf "\"CURRENT TIME\",%s (00:00:00)\n" "$now_hms" >> "$output"
 printf "\"MAX DEADLINE\",%s (%s)\n" "$max_deadline" "$total_hms" >> "$output"
 printf "\"CHALLENGE DEADLINE\",%s (%s)\n" "$challenge_deadline" "$(printf '%02d:%02d:%02d' $((half_total/3600)) $(((half_total%3600)/60)) $((half_total%60)))" >> "$output"
+
+# ---- POMODORO SESSIONS ----
+
+printf "POMODORO SESSIONS %d (%d min blocks)\n" "$pomodoro_sessions" "$((POMODORO_LIMIT/60))"
+printf "\"POMODORO SESSIONS\",%d,,\n" "$pomodoro_sessions" >> "$output"
