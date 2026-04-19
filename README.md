@@ -12,7 +12,6 @@ Does the following:
 - Alarm will sound when the timer runs out.
 - Split by pomodoro sessions.
 
-
 ## Setup
 ```
 mkdir -p ~/scripts
@@ -35,3 +34,7 @@ video-study
 
 ## Running script column (Timer + Open video file)
 Run the command from the same location you ran the video-study command (where the .csv was generated)
+
+
+# Future features 
+- Speed should not always be half. It should be how much speed increase you can do before you can no longer understand what the person in the video is saying. Input that multiplier (1.1/1.2/1.3 ... 2.0/2.1/2.2 etc.) and that should tell you how long it will take to finish in challenge time.
